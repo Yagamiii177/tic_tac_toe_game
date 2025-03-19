@@ -1,4 +1,5 @@
 import React, { createContext, useState } from "react";
+import { Alert } from "react-native";
 
 export const GameContext = createContext();
 
@@ -17,6 +18,27 @@ export const GameProvider = ({ children }) => {
     }));
   };
 
+  const resetLeaderboard = () => {
+    Alert.alert(
+      "Warning",
+      "Are you sure you want to reset the leaderboard? This action cannot be undone.",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Reset",
+          onPress: () => {
+            setLeaderboard({});
+          },
+          style: "destructive",
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+
   return (
     <GameContext.Provider
       value={{
@@ -32,6 +54,7 @@ export const GameProvider = ({ children }) => {
         setLastWinner,
         leaderboard,
         updateLeaderboard,
+        resetLeaderboard,
       }}
     >
       {children}

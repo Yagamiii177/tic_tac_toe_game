@@ -11,7 +11,8 @@ import { GameContext } from "../context/GameContext";
 import { useNavigation } from "@react-navigation/native";
 
 const LeaderboardScreen = () => {
-  const { leaderboard, resetScores } = useContext(GameContext);
+  const { leaderboard, resetLeaderboard, resetScores } =
+    useContext(GameContext);
   const navigation = useNavigation();
 
   const renderItem = ({ item, index }) => (
@@ -47,7 +48,7 @@ const LeaderboardScreen = () => {
         <Text style={styles.backButtonText}>Back to Game</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.resetButton} onPress={resetScores}>
+      <TouchableOpacity style={styles.resetButton} onPress={resetLeaderboard}>
         <Text style={styles.resetButtonText}>Reset Leaderboard</Text>
       </TouchableOpacity>
     </View>
