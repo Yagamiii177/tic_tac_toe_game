@@ -3,25 +3,35 @@ import React, { createContext, useState } from "react";
 export const GameContext = createContext();
 
 export const GameProvider = ({ children }) => {
-  const [player1Name, setPlayer1Name] = useState("Player 1");
-  const [player2Name, setPlayer2Name] = useState("Player 2");
+  const [player1Name, setPlayer1Name] = useState("");
+  const [player2Name, setPlayer2Name] = useState("");
   const [scoreX, setScoreX] = useState(0);
   const [scoreO, setScoreO] = useState(0);
-  const [lastWinner, setLastWinner] = useState(null);
+  const [lastWinner, setLastWinner] = useState(null); // <-- Define setLastWinner
+  const [leaderboard, setLeaderboard] = useState({});
+
+  const updateLeaderboard = (player) => {
+    setLeaderboard((prevLeaderboard) => ({
+      ...prevLeaderboard,
+      [player]: (prevLeaderboard[player] || 0) + 1,
+    }));
+  };
 
   return (
     <GameContext.Provider
       value={{
         player1Name,
-        setPlayer1Name,
         player2Name,
-        setPlayer2Name,
         scoreX,
-        setScoreX,
         scoreO,
+        setPlayer1Name,
+        setPlayer2Name,
+        setScoreX,
         setScoreO,
         lastWinner,
         setLastWinner,
+        leaderboard,
+        updateLeaderboard,
       }}
     >
       {children}

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -9,15 +9,26 @@ const Board = () => {
   const {
     player1Name,
     player2Name,
-    scoreX,
-    scoreO,
-    setScoreX,
-    setScoreO,
+    leaderboard,
+    updateLeaderboard,
     setPlayer1Name,
     setPlayer2Name,
+    setLastWinner,
   } = useContext(GameContext);
 
-  const { lastWinner, setLastWinner } = useContext(GameContext);
+  const [scoreX, setScoreX] = useState(0);
+  const [scoreO, setScoreO] = useState(0);
+  const [currentMatchWinsX, setCurrentMatchWinsX] = useState(0);
+  const [currentMatchWinsO, setCurrentMatchWinsO] = useState(0);
+
+  useEffect(() => {
+    const player1Score = leaderboard[player1Name] || 0;
+    const player2Score = leaderboard[player2Name] || 0;
+
+    setScoreX(player1Score);
+    setScoreO(player2Score);
+  }, [player1Name, player2Name, leaderboard]);
+
   const [board, setBoard] = useState(Array(9).fill(null));
   const [currentPlayer, setCurrentPlayer] = useState("X");
   const [winner, setWinner] = useState(null);
@@ -62,9 +73,13 @@ const Board = () => {
 
       if (gameWinner === "X") {
         setScoreX((prevScore) => prevScore + 1);
+        setCurrentMatchWinsX((prevWins) => prevWins + 1);
+        updateLeaderboard(player1Name);
         Alert.alert(`${player1Name} Wins! 🎉`);
       } else {
         setScoreO((prevScore) => prevScore + 1);
+        setCurrentMatchWinsO((prevWins) => prevWins + 1);
+        updateLeaderboard(player2Name);
         Alert.alert(`${player2Name} Wins! 🎉`);
       }
 
@@ -128,6 +143,8 @@ const Board = () => {
             setBoard(Array(9).fill(null));
             setWinner(null);
             setCurrentPlayer("X");
+            setCurrentMatchWinsX(0);
+            setCurrentMatchWinsO(0);
 
             if (resetNames) {
               setIsModalVisible(true);
@@ -148,15 +165,29 @@ const Board = () => {
         onSave={handleSaveNames}
       />
 
+      <View style={styles.currentMatchContainer}>
+        <Text style={styles.currentMatchHeader}>Current Match Score:</Text>
+        <Text style={styles.currentMatchText}>
+          <Text style={{ color: "#476bed" }}>
+            {player1Name} (X): {currentMatchWinsX}
+          </Text>{" "}
+          |{" "}
+          <Text style={{ color: "#FF6347" }}>
+            {player2Name} (O): {currentMatchWinsO}
+          </Text>
+        </Text>
+      </View>
+
+      <Text style={styles.leaderboardHeader}>Leaderboard Score</Text>
       <View style={styles.scoreContainer}>
         <View style={styles.playerScoreX}>
           <Text style={styles.scoreText}>
-            {player1Name} (X): {scoreX}
+            {player1Name} : {scoreX}
           </Text>
         </View>
         <View style={styles.playerScoreO}>
           <Text style={styles.scoreText}>
-            {player2Name} (O): {scoreO}
+            {player2Name} : {scoreO}
           </Text>
         </View>
       </View>
@@ -216,6 +247,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     margin: 5,
+    bottom: 25,
   },
   squareX: {
     backgroundColor: "#476bed",
@@ -232,6 +264,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     marginBottom: 30,
     marginTop: 10,
+    bottom: 25,
   },
   scoreContainer: {
     flexDirection: "row",
@@ -239,7 +272,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     overflow: "hidden",
     marginBottom: 20,
-    top: 500,
+    top: 520,
     marginLeft: 44,
     marginRight: 44,
   },
@@ -262,9 +295,36 @@ const styles = StyleSheet.create({
   },
   newGameButton: {
     position: "absolute",
-    bottom: 514.3,
+    bottom: 588,
     right: 20,
     padding: 10,
+  },
+  scoreHeader: {
+    fontSize: 20,
+    fontWeight: "bold",
+    top: 500,
+    textAlign: "center",
+  },
+  currentMatchContainer: {
+    alignItems: "center",
+    marginVertical: 10,
+    marginBottom: 20,
+    top: 70,
+  },
+  currentMatchHeader: {
+    fontSize: 26,
+    marginBottom: 5,
+  },
+  currentMatchText: {
+    fontSize: 25,
+    fontWeight: "bold",
+  },
+  leaderboardHeader: {
+    fontWeight: "bold",
+    fontSize: 18,
+    top: 510,
+    marginBottom: 10,
+    marginTop: 10,
   },
 });
 

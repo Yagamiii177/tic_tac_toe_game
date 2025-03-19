@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 40,
     fontWeight: "bold",
-    bottom: 35,
+    bottom: 7,
   },
   backButton: {
     position: "absolute",
