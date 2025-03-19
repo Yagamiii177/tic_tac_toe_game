@@ -7,7 +7,7 @@ export const GameProvider = ({ children }) => {
   const [player2Name, setPlayer2Name] = useState("");
   const [scoreX, setScoreX] = useState(0);
   const [scoreO, setScoreO] = useState(0);
-  const [lastWinner, setLastWinner] = useState(null); // <-- Define setLastWinner
+  const [lastWinner, setLastWinner] = useState(null);
   const [leaderboard, setLeaderboard] = useState({});
 
   const updateLeaderboard = (player) => {

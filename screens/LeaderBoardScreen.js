@@ -29,7 +29,6 @@ const LeaderboardScreen = () => {
         <Ionicons name="trophy" size={30} color="#FFD700" style={styles.icon} />
       </View>
 
-      {/* Labels */}
       <View style={styles.labelRow}>
         <Text style={styles.label}>Rank</Text>
         <Text style={styles.label}>Wins</Text>
